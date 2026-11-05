@@ -61,6 +61,7 @@ class _VideoPlayerItemState extends State<VideoPlayerItem> {
       await _controller!.setLooping(widget.isLooping);
       await _controller!.setVolume(widget.volume);
       await _controller!.setPlaybackSpeed(widget.playbackSpeed);
+      _controller!.addListener(_onControllerStateChanged);
 
       if (mounted) {
         setState(() {
@@ -136,9 +137,20 @@ class _VideoPlayerItemState extends State<VideoPlayerItem> {
     }
   }
 
+  void _onControllerStateChanged() {
+    if (!mounted || _controller == null) return;
+    final isPlaying = _controller!.value.isPlaying;
+    if (_isPlayingState != isPlaying) {
+      setState(() {
+        _isPlayingState = isPlaying;
+      });
+    }
+  }
+
   @override
   void dispose() {
     // Immediately release hardware decoder and surface texture
+    _controller?.removeListener(_onControllerStateChanged);
     _controller?.pause();
     _controller?.dispose();
     _controller = null;

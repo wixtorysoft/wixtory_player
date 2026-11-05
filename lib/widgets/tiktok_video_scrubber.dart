@@ -55,19 +55,13 @@ class _TikTokVideoScrubberState extends State<TikTokVideoScrubber> {
     HapticFeedback.selectionClick();
     _hideHudTimer?.cancel();
 
-    final currentPos = widget.controller.value.position;
-    _wasPlayingBeforeDrag = widget.controller.value.isPlaying;
-    if (_wasPlayingBeforeDrag) {
-      widget.controller.pause();
-    }
-
     final ratio = (details.localPosition.dx / totalWidth).clamp(0.0, 1.0);
     final target = Duration(milliseconds: (totalDuration.inMilliseconds * ratio).round());
 
     setState(() {
       _isScrubbing = true;
       _dragProgress = ratio;
-      _dragStartDuration = currentPos;
+      _dragStartDuration = widget.controller.value.position;
       _dragTargetDuration = target;
     });
 
@@ -92,14 +86,22 @@ class _TikTokVideoScrubberState extends State<TikTokVideoScrubber> {
     if (!_isScrubbing) return;
 
     HapticFeedback.lightImpact();
-    widget.controller.seekTo(_dragTargetDuration).then((_) {
-      if (_wasPlayingBeforeDrag) {
+
+    // Loop to beginning if scrubbed to the very end
+    final target = _dragTargetDuration >= totalDuration
+        ? Duration.zero
+        : _dragTargetDuration;
+
+    // Immediately seek to target position and ALWAYS resume playing automatically!
+    widget.controller.seekTo(target).then((_) {
+      if (mounted) {
         widget.controller.play();
       }
     });
+    widget.controller.play();
 
     _hideHudTimer?.cancel();
-    _hideHudTimer = Timer(const Duration(milliseconds: 600), () {
+    _hideHudTimer = Timer(const Duration(milliseconds: 500), () {
       if (mounted) {
         setState(() {
           _isScrubbing = false;
@@ -122,10 +124,16 @@ class _TikTokVideoScrubberState extends State<TikTokVideoScrubber> {
       _dragTargetDuration = target;
     });
 
-    widget.controller.seekTo(target);
+    final seekTarget = target >= totalDuration ? Duration.zero : target;
+    widget.controller.seekTo(seekTarget).then((_) {
+      if (mounted) {
+        widget.controller.play();
+      }
+    });
+    widget.controller.play();
 
     _hideHudTimer?.cancel();
-    _hideHudTimer = Timer(const Duration(milliseconds: 800), () {
+    _hideHudTimer = Timer(const Duration(milliseconds: 700), () {
       if (mounted) {
         setState(() {
           _isScrubbing = false;
@@ -440,3 +448,4 @@ class _TikTokVideoScrubberState extends State<TikTokVideoScrubber> {
     );
   }
 }
+
