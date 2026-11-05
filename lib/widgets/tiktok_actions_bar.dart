@@ -284,11 +284,7 @@ class _TikTokActionsBarState extends State<TikTokActionsBar>
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        // 1. User Avatar + Media Type Tag
-        _buildAvatarButton(),
-        const SizedBox(height: 14),
-
-        // 2. Playlists Management Launcher ("Listeler")
+        // 1. Playlists Management Launcher ("Listeler")
         _buildActionButton(
           icon: Icons.playlist_play_rounded,
           iconColor: AppColors.tiktokCyan,
@@ -354,49 +350,6 @@ class _TikTokActionsBarState extends State<TikTokActionsBar>
 
         // 9. Spinning Vinyl Disk
         _buildSpinningVinyl(),
-      ],
-    );
-  }
-
-  Widget _buildAvatarButton() {
-    return Stack(
-      alignment: Alignment.center,
-      clipBehavior: Clip.none,
-      children: [
-        Container(
-          width: 44,
-          height: 44,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            border: Border.all(color: Colors.white, width: 2),
-            gradient: LinearGradient(
-              colors: widget.video.isAudio
-                  ? [const Color(0xFF9D4EDD), AppColors.tiktokCyan]
-                  : [AppColors.tiktokCyan, AppColors.tiktokRed],
-            ),
-          ),
-          child: Center(
-            child: Icon(
-              widget.video.isAudio ? Icons.headphones_rounded : Icons.videocam_rounded,
-              color: Colors.white,
-              size: 24,
-            ),
-          ),
-        ),
-        Positioned(
-          bottom: -6,
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
-            decoration: BoxDecoration(
-              color: widget.video.isAudio ? const Color(0xFF9D4EDD) : AppColors.tiktokRed,
-              borderRadius: BorderRadius.circular(6),
-            ),
-            child: Text(
-              widget.video.fileExtension,
-              style: const TextStyle(color: Colors.white, fontSize: 8, fontWeight: FontWeight.bold),
-            ),
-          ),
-        ),
       ],
     );
   }
