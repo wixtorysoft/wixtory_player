@@ -5,6 +5,7 @@ import 'package:video_player/video_player.dart';
 import '../models/video_item.dart';
 import '../theme/app_colors.dart';
 import 'audio_visualizer_view.dart';
+import 'tiktok_video_scrubber.dart';
 
 class VideoPlayerItem extends StatefulWidget {
   final VideoItem video;
@@ -238,21 +239,11 @@ class _VideoPlayerItemState extends State<VideoPlayerItem> {
               ),
             ),
 
-          // 3. Subtle Bottom Scrubber Progress Bar
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 0,
-            child: VideoProgressIndicator(
-              _controller!,
-              allowScrubbing: true,
-              padding: const EdgeInsets.symmetric(vertical: 4),
-              colors: VideoProgressColors(
-                playedColor: widget.video.isAudio ? AppColors.tiktokCyan : AppColors.tiktokRed,
-                bufferedColor: Colors.white24,
-                backgroundColor: Colors.transparent,
-              ),
-            ),
+          // 3. TikTok Scrubber & Real-time Timestamp HUD
+          TikTokVideoScrubber(
+            controller: _controller!,
+            isAudio: widget.video.isAudio,
+            playedColor: widget.video.isAudio ? AppColors.tiktokCyan : AppColors.tiktokRed,
           ),
         ],
       ),

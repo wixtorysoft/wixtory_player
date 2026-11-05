@@ -304,18 +304,21 @@ class _TikTokFeedScreenState extends State<TikTokFeedScreen> {
                     isFitContain: provider.isFitContain,
                   ),
 
-                  // Bottom Left: Author & Info Overlay
+                  // Bottom Left: Author & Info Overlay (elevated above scrubber)
                   Positioned(
                     left: 0,
                     right: 80,
-                    bottom: 0,
-                    child: TikTokBottomInfo(video: video),
+                    bottom: 26,
+                    child: IgnorePointer(
+                      ignoring: true,
+                      child: TikTokBottomInfo(video: video),
+                    ),
                   ),
 
                   // Bottom Right: Actions Bar (Playlists, Volume, Speed, Library, Vinyl)
                   Positioned(
                     right: 12,
-                    bottom: 20,
+                    bottom: 26,
                     child: TikTokActionsBar(
                       video: video,
                       isMuted: provider.isMuted,
